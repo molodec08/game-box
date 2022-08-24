@@ -1,81 +1,97 @@
-import {FC, useEffect, useState} from "react";
-import {ButtonBase} from "@/UI/ButtonBase/ButtonBase";
-import {SearchItem} from "../SearchItem/SearchItem";
-import {useGetFilmsBySearchQuery} from '@/services/KinomoreService';
-import {Spinner, SpinnerSizes} from "@/UI/Spinner/Spinner";
-import {Button} from "@/UI/Button/Button";
-import classNames from "classnames";
-import styles from './SearchList.module.scss';
+import React, {useEffect, useState} from "react";
+import styled from "styled-components";
+import {ButtonBase} from "../../../UI/ButtonBase";
+import Ul from "../../../UI/Ul";
+import {SearchItem} from "../SearchItem";
+import {useGetGamesBySearchQuery} from '../../../../services/GameboxService';
+import {Spinner} from "../../../UI/Spinner";
 
-interface SearchListProps {
-  value: string;
-}
+const StyledWrapper = styled.div`
+  --offset: 15px;
+  position: absolute;
+  z-index: 2;
+  top: calc(100% + 7px);
+  left: 0;
+  width: 100%;
+  color: #fff;
+  background-color: #333;
+  border-radius: 5px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
 
-export const SearchList: FC<SearchListProps> = ({value}) => {
+  @media (max-width: 768px) {
+      top: 100%;
+      border-radius: 0;
+      background-color: #2f2f2f;
+  }
+`
 
-  const [type, setType] = useState<string>('1')
-  const {data, isFetching, refetch} = useGetFilmsBySearchQuery({query: value, type, limit: 100})
-  const {docs} = {...data}
+const StyledList = styled.ul`
+
+`
+
+export const SearchList = ({value}) => {
+
+  const [page, setPage] = useState('1')
+  const {data, isFetching, refetch} = useGetGamesBySearchQuery({name: value, page})
+  const {results} = {...data}
 
   useEffect(() => {
     refetch()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value])
 
-  const handleChangeType = (type: string) => setType(type)
-
   return (
-    <div className={styles.wrapper}>
-      <div className={styles.top}>
-        <div className={styles.btns}>
-          <Button
-            type='button'
-            variant='sm'
-            onClick={() => handleChangeType('1')}
-            className={classNames(styles.btn, type === '1' && styles.active)}
-          >
-            Фильмы
-          </Button>
-          <Button
-            type='button'
-            variant='sm'
-            onClick={() => handleChangeType('2')}
-            className={classNames(styles.btn, type === '2' && styles.active)}
-          >
-            Сериалы
-          </Button>
-          <Button
-            type='button'
-            variant='sm'
-            onClick={() => handleChangeType('3')}
-            className={classNames(styles.btn, type === '3' && styles.active)}
-          >
-            Мультики
-          </Button>
-        </div>
-      </div>
+    <StyledWrapper>
+      {/*<div className={styles.top}>*/}
+      {/*  <div className={styles.btns}>*/}
+      {/*    <ButtonBase*/}
+      {/*      type='button'*/}
+      {/*      onClick={() => handleChangeType('1')}*/}
+      {/*      className={classNames(styles.btn, type === '1' && styles.active)}*/}
+      {/*    >*/}
+      {/*      Фильмы*/}
+      {/*    </ButtonBase>*/}
+      {/*    <ButtonBase*/}
+      {/*      type='button'*/}
+      {/*      onClick={() => handleChangeType('2')}*/}
+      {/*      className={classNames(styles.btn, type === '2' && styles.active)}*/}
+      {/*    >*/}
+      {/*      Сериалы*/}
+      {/*    </ButtonBase>*/}
+      {/*    <ButtonBase*/}
+      {/*      type='button'*/}
+      {/*      onClick={() => handleChangeType('3')}*/}
+      {/*      className={classNames(styles.btn, type === '3' && styles.active)}*/}
+      {/*    >*/}
+      {/*      Мультики*/}
+      {/*    </ButtonBase>*/}
+      {/*  </div>*/}
+      {/*</div>*/}
       <>
-        {docs?.length ? (
+        {results?.length ? (
           <>
             {!isFetching ? (
               <>
-                <ul className={classNames("list-reset", styles.list)}>
-                  {docs.map((item) => (
+                <Ul list>
+                  {results.map((item) => (
                     <SearchItem key={item.id} item={item} />
                   ))}
-                </ul>
+                </Ul>
               </>
             ) : (
-              <div className={styles.loader}>
-                <Spinner variant='dark' size={SpinnerSizes.medium} />
+              <div>
+                <Spinner variant='dark' size={'48px'} />
               </div>
             )}
           </>
         ) : (
-          <p className={styles.desc}>По вашему запросу ничего не найдено</p>
+          <p>По вашему запросу ничего не найдено</p>
         )}
       </>
-      <ButtonBase ripple className={styles.more}>Показать все</ButtonBase>
-    </div>
+      <ButtonBase more>Показать все</ButtonBase>
+    </StyledWrapper>
   );
 }

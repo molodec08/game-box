@@ -9,9 +9,25 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^1.8.4",
+    "dayjs": "^1.11.5",
     "next": "12.2.5",
-    "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "next-redux-wrapper": "^7.0.5",
+    "react": "18.1.0",
+    "react-device-detect": "^2.2.2",
+    "react-dom": "18.1.0",
+    "react-hook-form": "^7.34.2",
+    "react-icons": "^4.4.0",
+    "react-range": "^1.8.14",
+    "react-ratio": "^0.1.5",
+    "react-redux": "^8.0.2",
+    "react-select": "^5.4.0",
+    "react-slick": "^0.29.0",
+    "react-tabs": "^5.1.0",
+    "redux": "^4.2.0",
+    "styled-components": "^5.3.5",
+    "swiper": "^8.3.2",
+    "usehooks-ts": "^2.5.3"
   },
   "devDependencies": {
     "eslint": "8.22.0",
